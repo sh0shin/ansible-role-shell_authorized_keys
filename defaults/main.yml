@@ -1,0 +1,16 @@
+---
+
+# enabled
+shell_authorized_keys_enabled: no
+
+# users
+shell_authorized_keys_userlist: []
+#shell_authorized_keys_userlist:
+#  - name: "ansible"
+#    authorized_keys:
+#      - "ssh-ed25519 ..."
+
+shell_authorized_keys_userlist_local: []
+
+# vim: set syn=yaml sw=2 ts=2 et colorcolumn=160 :
+# eof

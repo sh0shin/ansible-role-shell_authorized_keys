@@ -1,0 +1,48 @@
+---
+
+# forced os variables
+- name: os forced variables
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution }}-{{ ansible_machine | default("none") }}.yml'
+        - '{{ ansible_distribution }}-{{ ansible_distribution_release | default(0) }}.yml'
+        - '{{ ansible_distribution }}-{{ ansible_distribution_version | default(0) }}.yml'
+        - '{{ ansible_distribution }}-{{ ansible_distribution_major_version | default(0) }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+        - 'main.yml'
+      paths:
+        - 'vars'
+  when: shell_authorized_keys_enabled
+        and ansible_os_family | string in shell_authorized_keys_os_family_supported
+  tags: [ authorized_keys ]
+
+# authorized_keys
+- name: users authorized_keys
+  authorized_key:
+    user: '{{ item.name }}'
+    key: "{{ item.authorized_keys | join('\n') }}"
+    exclusive: yes
+    manage_dir: yes
+  loop: '{{ shell_authorized_keys_userlist }}'
+  when: shell_authorized_keys_enabled
+        and ansible_os_family | string in shell_authorized_keys_os_family_supported
+        and item.authorized_keys is defined
+  tags: [ authorized_keys ]
+
+- name: users authorized_keys local
+  authorized_key:
+    user: '{{ item.name }}'
+    key: "{{ item.authorized_keys | join('\n') }}"
+    exclusive: yes
+    manage_dir: yes
+  loop: '{{ shell_authorized_keys_userlist_local }}'
+  when: shell_authorized_keys_enabled
+        and ansible_os_family | string in shell_authorized_keys_os_family_supported
+        and item.authorized_keys is defined
+  tags: [ authorized_keys ]
+
+# vim: set syn=yaml sw=2 ts=2 et colorcolumn=160 :
+# eof

@@ -7,6 +7,7 @@ shell_authorized_keys_enabled: no
 shell_authorized_keys_userlist: []
 #shell_authorized_keys_userlist:
 #  - name: "ansible"
+#    state: present
 #    authorized_keys:
 #      - "ssh-ed25519 ..."
 

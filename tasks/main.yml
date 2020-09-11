@@ -23,10 +23,13 @@
 - name: users authorized_keys
   authorized_key:
     user: '{{ item.name }}'
+    state: '{{ item.state | default("present") }}'
     key: "{{ item.authorized_keys | join('\n') }}"
     exclusive: yes
     manage_dir: yes
   loop: '{{ shell_authorized_keys_userlist }}'
+  loop_control:
+    label: '{{ item.name }}'
   when: shell_authorized_keys_enabled
         and ansible_os_family | string in shell_authorized_keys_os_family_supported
         and item.authorized_keys is defined
@@ -35,10 +38,13 @@
 - name: users authorized_keys local
   authorized_key:
     user: '{{ item.name }}'
+    state: '{{ item.state | default("present") }}'
     key: "{{ item.authorized_keys | join('\n') }}"
     exclusive: yes
     manage_dir: yes
   loop: '{{ shell_authorized_keys_userlist_local }}'
+  loop_control:
+    label: '{{ item.name }}'
   when: shell_authorized_keys_enabled
         and ansible_os_family | string in shell_authorized_keys_os_family_supported
         and item.authorized_keys is defined
